@@ -12,8 +12,6 @@ export default {
 
 <style scoped>
 .app-header {
-  position: fixed;
-  top: 0;
   width: 100%;
   background-color: #333;
   color: white;

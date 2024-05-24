@@ -1,10 +1,25 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <div id="app">
+    <app-header></app-header>
+    <section class="content">
+      <nav>
+        <router-link to="/">Contact List</router-link> |
+        <router-link to="/create">Create Contact</router-link>
+      </nav>
+      <router-view />
+    </section>
+  </div>
 </template>
+
+<script>
+import AppHeader from './components/AppHeader.vue';
+
+export default {
+  components: {
+    AppHeader,
+  },
+};
+</script>
 
 <style>
 #app {
@@ -19,16 +34,7 @@ body {
   margin: 0;
 }
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.content {
+  padding-top: 4rem;
 }
 </style>
