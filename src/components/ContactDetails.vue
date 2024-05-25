@@ -15,25 +15,32 @@
     <button @click="deleteContact">Delete</button>
     <div v-if="isEditing">
       <form @submit.prevent="saveEdit">
-        <div>
-          <label>Photo URL:</label>
-          <input v-model="editData.photo" type="text" />
-        </div>
-        <div>
-          <label>Salutation:</label>
-          <input v-model="editData.salutation" type="text" />
-        </div>
-        <div>
-          <label>First Name:</label>
-          <input v-model="editData.firstName" type="text" required />
-        </div>
-        <div>
-          <label>Last Name:</label>
-          <input v-model="editData.lastName" type="text" required />
-        </div>
+        <TextInput id="photo" label="Photo URL:" v-model="editData.photo" />
+        <TextInput
+          id="salutation"
+          label="Salutation:"
+          v-model="editData.salutation"
+        />
+        <TextInput
+          id="firstName"
+          label="First Name:"
+          v-model="editData.firstName"
+          required
+        />
+        <TextInput
+          id="lastName"
+          label="Last Name:"
+          v-model="editData.lastName"
+          required
+        />
         <div v-for="(phone, index) in editData.phoneNumbers" :key="index">
-          <label>Phone Number:</label>
-          <input v-model="phone.number" type="text" required />
+          <TextInput
+            :id="'phone' + index"
+            label="Phone Number:"
+            v-model="phone.number"
+            type="tel"
+            required
+          />
           <select v-model="phone.type" required>
             <option value="work">Work</option>
             <option value="cell">Cell</option>
@@ -53,9 +60,13 @@
 import { computed, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useContactStore } from '../store';
+import TextInput from './TextInput.vue';
 
 export default {
   name: 'ContactDetails',
+  components: {
+    TextInput,
+  },
   setup() {
     const contactStore = useContactStore();
     const router = useRouter();
