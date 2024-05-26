@@ -2,7 +2,7 @@
   <div class="contact-card">
     <img :src="contact.photo" alt="Contact Photo" />
     <h2>{{ contact.firstName }} {{ contact.lastName }}</h2>
-    <p>{{ contact.primaryPhone }}</p>
+    <p>{{ contact.primaryPhone }} (Primary)</p>
     <button @click="viewDetails">View Details</button>
   </div>
 </template>
