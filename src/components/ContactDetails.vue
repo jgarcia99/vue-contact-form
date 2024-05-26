@@ -14,44 +14,11 @@
     <button @click="editContact">Edit</button>
     <button @click="deleteContact">Delete</button>
     <div v-if="isEditing">
-      <form @submit.prevent="saveEdit">
-        <TextInput id="photo" label="Photo URL:" v-model="editData.photo" />
-        <TextInput
-          id="salutation"
-          label="Salutation:"
-          v-model="editData.salutation"
-        />
-        <TextInput
-          id="firstName"
-          label="First Name:"
-          v-model="editData.firstName"
-          required
-        />
-        <TextInput
-          id="lastName"
-          label="Last Name:"
-          v-model="editData.lastName"
-          required
-        />
-        <div v-for="(phone, index) in editData.phoneNumbers" :key="index">
-          <TextInput
-            :id="'phone' + index"
-            label="Phone Number:"
-            v-model="phone.number"
-            type="tel"
-            required
-          />
-          <select v-model="phone.type" required>
-            <option value="work">Work</option>
-            <option value="cell">Cell</option>
-            <option value="home">Home</option>
-          </select>
-          <button type="button" @click="removePhone(index)">Remove</button>
-        </div>
-        <button type="button" @click="addPhone">Add Phone Number</button>
-        <button type="submit">Save</button>
-        <button type="button" @click="cancelEdit">Cancel</button>
-      </form>
+      <ContactForm
+        :contact="editData"
+        @submit="saveEdit"
+        @cancel="cancelEdit"
+      />
     </div>
   </div>
 </template>
@@ -60,12 +27,12 @@
 import { computed, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useContactStore } from '../store';
-import TextInput from './TextInput.vue';
+import ContactForm from './ContactForm.vue';
 
 export default {
   name: 'ContactDetails',
   components: {
-    TextInput,
+    ContactForm,
   },
   setup() {
     const contactStore = useContactStore();
@@ -84,13 +51,24 @@ export default {
     const editContact = () => {
       editData.value = {
         ...contact.value,
-        phoneNumbers: [...contact.value.phoneNumbers],
+        phoneNumbers: contact.value.phoneNumbers
+          ? [...contact.value.phoneNumbers]
+          : [],
       };
+
+      if (editData.value.phoneNumbers.length > 0) {
+        const primaryIndex = editData.value.phoneNumbers.findIndex(
+          (phone) => phone.primary
+        );
+        editData.value.primaryPhoneIndex =
+          primaryIndex !== -1 ? primaryIndex : 0;
+      }
+
       isEditing.value = true;
     };
 
-    const saveEdit = () => {
-      contactStore.updateContact(editData.value);
+    const saveEdit = (updatedContact) => {
+      contactStore.updateContact(updatedContact);
       isEditing.value = false;
     };
 
@@ -104,18 +82,6 @@ export default {
       router.push('/');
     };
 
-    const addPhone = () => {
-      editData.value.phoneNumbers.push({
-        number: '',
-        type: 'work',
-        primary: false,
-      });
-    };
-
-    const removePhone = (index) => {
-      editData.value.phoneNumbers.splice(index, 1);
-    };
-
     return {
       contact,
       isEditing,
@@ -124,8 +90,6 @@ export default {
       saveEdit,
       cancelEdit,
       deleteContact,
-      addPhone,
-      removePhone,
     };
   },
 };
@@ -147,9 +111,6 @@ ul {
 }
 .home {
   color: red;
-}
-form div {
-  margin-bottom: 1rem;
 }
 button {
   margin-right: 0.5rem;
