@@ -1,17 +1,21 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <TextInput id="photo" label="Photo URL:" v-model="form.photo" />
-    <TextInput id="salutation" label="Salutation:" v-model="form.salutation" />
+    <TextInput id="photo" label="Photo URL:" v-model.trim="form.photo" />
+    <TextInput
+      id="salutation"
+      label="Salutation:"
+      v-model.trim="form.salutation"
+    />
     <TextInput
       id="firstName"
       label="First Name:"
-      v-model="form.firstName"
+      v-model.trim="form.firstName"
       required
     />
     <TextInput
       id="lastName"
       label="Last Name:"
-      v-model="form.lastName"
+      v-model.trim="form.lastName"
       required
     />
 
@@ -23,7 +27,7 @@
       <TextInput
         :id="'phone' + index"
         label="Phone Number:"
-        v-model="phone.number"
+        v-model.trim="phone.number"
         type="tel"
         required
       />
